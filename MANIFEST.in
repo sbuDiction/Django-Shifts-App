@@ -1,0 +1,4 @@
+include LICENSE
+include README.md
+recursive-include shif_mananger/static *
+recursive-include shif_mananger/templates *

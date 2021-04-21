@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'shift_mananger/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'shift_mananger/css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'shift_mananger/css/bootstrap.min.css' %}">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <a style="font-family: sans-serif;color: #6F42C1;" href="{% url 'shift:index' %}">
+                    Home
+                </a>
+                <!-- <a style="font-family: sans-serif;padding-left: 5%;" href="{% url 'shift:index' %}">
+                    Account info
+                </a> -->
+                <div style="font-family: sans-serif;" class="right menu">
+                    <p style="padding-left: 30%;color: #6F42C1;">Welcome {{person.first_name}} {{person.last_name}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div  class="col-12">
+                {% if success_message %}<p><strong style="padding-left: 23%;font-family: sans-serif;"
+                        class="text-center">{{ success_message }}</strong></p>
+                {% else%}
+                {% if clear_message %}<p><strong style="padding-left: 23%;font-family: sans-serif;"
+                        class="text-center">{{ clear_message}}</strong></p>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <hr>
+        <form action="{% url 'shift:update_shift' person.id %}" method="POST">
+            <div class="row">
+                <div class="col-12">
+                    <div class="custom-control custom-checkbox custom-contro">
+                        {% csrf_token %}
+                        {% for days in person.shift_set.all %}
+                        {% if days.counter %}
+                        <input type="checkbox" class="custom-control-input" name="days" id="id_days" value="{{days}}"
+                            checked>
+                        {% else %}
+                        <input type="checkbox" class="custom-control-input" name="days" id="id_days" value="{{days}}">
+                        {% endif %}
+                        <label style="font-family: sans-serif;" class="custom-control-label"
+                            for="days{{ forloop.counter }}">{{days.get_day_display}}</label><br>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+                <div class="col">
+                    <div style="padding-top: 3%;" class="justify-content-center">
+                        {% if person.shift_set.all %}
+                        <button style="font-family: sans-serif;" type="submit" class="btn btn-success">Update</button>
+                        {% else %}
+                        <p><strong style="font-family: sans-serif;">You don't have working days.</strong></p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col"></div>
+                <div class="col"></div>
+            </div>
+            <hr>
+        </form>
+    </div>
+</body>
+
+</html>

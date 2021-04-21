@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'shift_mananger/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'shift_mananger/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href=" {% static 'shift_mananger/css/offcanvas.css' %}">
+    <title>Home</title>
+</head>
+<style>
+    html,
+    body {
+        overflow-x: hidden;
+        /* Prevent scroll on narrow devices */
+    }
+
+    body {
+        padding-top: 56px;
+    }
+
+    @media (max-width: 767.98px) {
+        .offcanvas-collapse {
+            position: fixed;
+            top: 56px;
+            /* Height of navbar */
+            bottom: 0;
+            width: 100%;
+            padding-right: 1rem;
+            padding-left: 1rem;
+            overflow-y: auto;
+            background-color: #000000;
+            transition: -webkit-transform .3s ease-in-out;
+            transition: transform .3s ease-in-out;
+            transition: transform .3s ease-in-out, -webkit-transform .3s ease-in-out;
+            -webkit-transform: translateX(100%);
+            transform: translateX(100%);
+        }
+
+        .offcanvas-collapse.open {
+            -webkit-transform: translateX(-1rem);
+            transform: translateX(-1rem);
+            /* Account for horizontal padding on navbar */
+        }
+    }
+
+    .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+    }
+
+    .nav-scroller .nav {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        color: rgba(5, 4, 4, 0.75);
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-underline .nav-link {
+        padding-top: .75rem;
+        padding-bottom: .75rem;
+        font-size: .875rem;
+        color: #000000;
+    }
+
+    .nav-underline .nav-link:hover {
+        color: blue;
+    }
+
+    .nav-underline .active {
+        font-weight: 500;
+        color: #000000;
+    }
+
+    .text-white-50 {
+        color: rgba(255, 255, 255, .5);
+    }
+
+    .bg-purple {
+        background-color: var(--purple);
+    }
+
+    /* .d-flex.align-items-center.p-3.my-3.text-white-50.bg-purple.rounded.box-shadow {} */
+
+    .border-bottom {
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .box-shadow {
+        box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    }
+
+    .lh-100 {
+        line-height: 1;
+    }
+
+    .lh-125 {
+        line-height: 1.25;
+    }
+
+    .lh-150 {
+        line-height: 1.5;
+    }
+</style>
+
+<body class="bg-light">
+
+    <nav style="padding: 8px 16px;" class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+        <a style="padding-left: 2%;font-family: sans-serif;" class="navbar-brand" href="#">Home</a>
+        <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a style="font-family: sans-serif;" class="nav-link" href="#">Profile</a>
+                </li>
+        </div>
+    </nav>
+
+    <div class="nav-scroller bg-white box-shadow">
+        <nav class="nav nav-underline">
+            <a style="font-family: sans-serif;" class="nav-link active" href="#">Dashboard</a>
+            <a class="nav-link" href="#">
+                People
+                <span style="color: #6C757D;"
+                    class="badge badge-pill bg-light align-text-bottom">{{counter.count}}</span>
+            </a>
+        </nav>
+    </div>
+
+    <main role="main" class="container">
+        <div style="background-color: #6F42C1;padding: 16px;margin: 16px 0px;"
+            class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
+            {% load static %}
+            <img class="mr-3" src="{% static 'shift_mananger/js/bootstrap-outline.svg' %}" alt="" width="48"
+                height="48">
+            <div style="padding-left: 3%;" class="lh-100">
+                <h6 style="font-family: sans-serif;" class="mb-0 text-white lh-100">Shift Administration</h6>
+                <small style="font-family: sans-serif;">To help you with managing your stuff members.</small>
+            </div>
+        </div>
+
+        {% for stuff in latest_people_list %}
+        <ul>
+            <li style="font-family: sans-serif;color: #6F42C1;">{{stuff.week_day}}</li>
+            {% if stuff.counter %}
+            <small style="font-family: sans-serif;color: rgba(0, 0, 0, 0.795);">Number of workers <span
+                    style="color: #6F42C1;font-family: sans-serif;"
+                    class="badge badge-pill align-text-bottom">{{stuff.counter}}</span></small>
+            {% else %}
+            <small style="font-family: sans-serif;color: rgba(0, 0, 0, 0.795);">No shifts available<span
+                    style="color: #6F42C1;font-family: sans-serif;"></span></small>
+            {% endif %}
+            {% for person in stuff.workers %}
+            <ul>
+                <li><a style="font-family: sans-serif;" href="{% url 'shift:detail' person.id %}">@{{person}}</a></li>
+            </ul>
+            {% endfor %}
+            <hr>
+        </ul>
+        {% endfor %}
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 style="font-family: sans-serif;" class="border-bottom border-gray pb-2 mb-0">Available workers</h6>
+            {% for members in people %}
+            {% if members%}
+            <div class="media text-muted pt-3">
+                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <strong class="text-gray-dark">{{members.first_name}} {{members.last_name}}</strong>
+                        <a href="{% url 'shift:detail' members.id %}">Update</a>
+                    </div>
+                    <!-- <span class="d-block">@{{members.last_name}}</span> -->
+                </div>
+            </div>
+            {% else %}
+            <div class="media text-muted pt-3">
+                <p style="font-family: sans-serif;">Sorry there are no workers available</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+        </div>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    {% load static %}
+    <script src="{% static 'shift_mananger/js/jquery.slim.min.js' %} "></script>
+    <script src="{% static 'shift_mananger/js/popper.min.js' %} "></script>
+    <script src="{% static 'shift_mananger/js/bootstrap.min.js' %} "></script>
+    <script src="{% static 'shift_mananger/js/bootstrap.js' %} "></script>
+    <script src="{% static 'shift_mananger/js/holder.min.js' %} "></script>
+    <script src="{% static 'shift_mananger/js/offcanvas.js' %} "></script>
+</body>
+
+</html>
